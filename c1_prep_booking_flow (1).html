@@ -1,0 +1,748 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+<title>Book Your CAE Prep</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --blue:#00AAFF;
+    --blue-light:#5CC8FF;
+    --green:#88CC00;
+    --green-light:#A6DE3D;
+    --sky:#E6F3FF;
+    --white:#FFFFFF;
+    --ink:#16324F;
+    --ink-dim:#5B7290;
+    --line:rgba(22,50,79,0.12);
+    --glass:rgba(255,255,255,0.62);
+    --glass-strong:rgba(255,255,255,0.85);
+    --radius:26px;
+    --radius-sm:18px;
+  }
+  *{box-sizing:border-box; -webkit-tap-highlight-color:transparent;}
+  html,body{height:100%;}
+  body{
+    margin:0;
+    background:
+      radial-gradient(circle at 10% -5%, rgba(0,170,255,0.55), transparent 48%),
+      radial-gradient(circle at 100% 8%, rgba(136,204,0,0.40), transparent 48%),
+      radial-gradient(circle at 15% 60%, rgba(0,170,255,0.30), transparent 50%),
+      radial-gradient(circle at 90% 90%, rgba(136,204,0,0.28), transparent 50%),
+      linear-gradient(180deg, #BFE3FF, #DCF0FF 55%, #EAF6FF 100%);
+    color:var(--ink);
+    font-family:'Inter', system-ui, sans-serif;
+    min-height:100%;
+    display:flex;
+    justify-content:center;
+  }
+  .phone{
+    width:100%;
+    max-width:460px;
+    min-height:100vh;
+    display:flex;
+    flex-direction:column;
+    position:relative;
+  }
+  header.top{
+    padding:22px 22px 14px;
+    display:flex;
+    align-items:center;
+    gap:12px;
+  }
+  .brand{
+    font-family:'Sora',sans-serif;
+    font-weight:700;
+    font-size:15px;
+    letter-spacing:0.2px;
+    color:var(--ink);
+  }
+  .brand span{color:var(--blue);}
+  .dots{
+    display:flex;
+    gap:6px;
+    margin-left:auto;
+  }
+  .dot{
+    width:22px; height:4px; border-radius:3px;
+    background:rgba(22,50,79,0.14);
+    transition:background .35s ease, width .35s ease;
+  }
+  .dot.done{background:var(--green);}
+  .dot.active{background:var(--blue); width:34px;}
+
+  main{
+    flex:1;
+    padding:6px 22px 200px;
+    position:relative;
+    overflow:hidden;
+  }
+  .step{
+    display:none;
+    animation:slideIn .38s ease;
+  }
+  .step.visible{display:block;}
+  @keyframes slideIn{
+    from{opacity:0; transform:translateX(18px);}
+    to{opacity:1; transform:translateX(0);}
+  }
+
+  .eyebrow{
+    font-size:13px;
+    color:var(--blue);
+    font-weight:700;
+    margin:0 0 8px;
+  }
+  h1{
+    font-family:'Sora',sans-serif;
+    font-size:26px;
+    line-height:1.22;
+    font-weight:700;
+    margin:0 0 8px;
+    color:var(--ink);
+  }
+  .sub{
+    color:var(--ink-dim);
+    font-size:15px;
+    line-height:1.5;
+    margin:0 0 26px;
+  }
+
+  .grid{display:flex; flex-direction:column; gap:10px;}
+  .grid.two-col{display:grid; grid-template-columns:1fr 1fr; gap:10px;}
+
+  /* glass card base with glossy top sheen */
+  .opt, .pkg, .toggle, .chip{
+    position:relative;
+    overflow:hidden;
+    background:var(--glass);
+    backdrop-filter:blur(14px);
+    -webkit-backdrop-filter:blur(14px);
+    border:1.5px solid rgba(255,255,255,0.9);
+    box-shadow:0 6px 20px rgba(0,120,200,0.08);
+    transition:border-color .2s ease, transform .18s ease, background .2s ease, box-shadow .2s ease;
+  }
+  .opt::before, .pkg::before{
+    content:"";
+    position:absolute; top:0; left:0; right:0; height:45%;
+    background:linear-gradient(180deg, rgba(255,255,255,0.55), rgba(255,255,255,0));
+    pointer-events:none;
+  }
+
+  .opt{
+    border-radius:var(--radius-sm);
+    padding:16px 16px;
+    display:flex;
+    align-items:center;
+    gap:12px;
+    cursor:pointer;
+    transition:border-color .2s ease, transform .15s ease, background .2s ease;
+    user-select:none;
+  }
+  .opt:active{transform:scale(0.98);}
+  .opt.selected{
+    border-color:var(--blue);
+    background:linear-gradient(180deg, rgba(0,170,255,0.18), rgba(0,170,255,0.06));
+  }
+  .opt .icon{
+    font-size:22px;
+    width:38px; height:38px;
+    display:flex; align-items:center; justify-content:center;
+    background:rgba(0,170,255,0.10);
+    border-radius:10px;
+    flex-shrink:0;
+  }
+  .opt.selected .icon{background:rgba(0,170,255,0.24);}
+  .opt .txt{flex:1;}
+  .opt .txt .t{font-weight:600; font-size:15px; color:var(--ink);}
+  .opt .txt .d{font-size:12.5px; color:var(--ink-dim); margin-top:2px;}
+  .opt .check{
+    width:20px; height:20px;
+    border-radius:50%;
+    border:1.5px solid var(--ink-dim);
+    flex-shrink:0;
+    position:relative;
+    background:rgba(255,255,255,0.6);
+  }
+  .opt.selected .check{border-color:var(--blue); background:var(--blue);}
+  .opt.selected .check::after{
+    content:"";
+    position:absolute; top:50%; left:50%;
+    width:5px; height:9px;
+    border-right:2px solid #fff;
+    border-bottom:2px solid #fff;
+    transform:translate(-50%,-60%) rotate(45deg);
+  }
+
+  .pkg{
+    border-radius:var(--radius);
+    padding:16px 18px;
+    cursor:pointer;
+    margin-bottom:10px;
+    transition:border-color .2s ease, transform .15s ease;
+  }
+  .pkg:active{transform:scale(0.98);}
+  .pkg.selected{border-color:var(--blue); background:linear-gradient(180deg, rgba(0,170,255,0.18), rgba(0,170,255,0.05));}
+  .pkg .row{display:flex; justify-content:space-between; align-items:baseline;}
+  .pkg .name{font-family:'Sora',sans-serif; font-weight:700; font-size:17px; color:var(--ink);}
+  .pkg .price{font-family:'Sora',sans-serif; font-weight:700; font-size:19px; color:var(--blue);}
+  .pkg .meta{font-size:12.5px; color:var(--ink-dim); margin-top:5px;}
+  .pkg .tag{
+    display:inline-block;
+    background:rgba(136,204,0,0.20);
+    color:#5C8A00;
+    font-size:11px;
+    font-weight:700;
+    padding:3px 9px;
+    border-radius:20px;
+    margin-bottom:10px;
+  }
+
+  .toggle-row{
+    display:flex; gap:10px; margin-top:14px;
+  }
+  .toggle{
+    flex:1;
+    text-align:center;
+    padding:12px;
+    border-radius:var(--radius-sm);
+    font-weight:600;
+    font-size:14px;
+    cursor:pointer;
+    color:var(--ink);
+  }
+  .toggle.selected{border-color:var(--green); color:#4A7000; background:rgba(136,204,0,0.16);}
+
+  .chips{display:flex; flex-wrap:wrap; gap:9px;}
+  .chip{
+    padding:10px 16px;
+    border-radius:20px;
+    font-size:14px;
+    font-weight:500;
+    cursor:pointer;
+    color:var(--ink);
+  }
+  .chip.selected{border-color:var(--blue); background:rgba(0,170,255,0.18); color:#0077B8;}
+
+  label.field{display:block; margin-bottom:16px;}
+  label.field .l{font-size:13px; color:var(--ink-dim); margin-bottom:7px; display:block; font-weight:500;}
+  input[type=text], input[type=tel], input[type=email]{
+    width:100%;
+    background:var(--glass);
+    backdrop-filter:blur(10px);
+    border:1.5px solid rgba(255,255,255,0.9);
+    border-radius:var(--radius-sm);
+    padding:14px 14px;
+    color:var(--ink);
+    font-size:15px;
+    font-family:'Inter',sans-serif;
+    outline:none;
+    transition:border-color .2s ease;
+  }
+  input:focus{border-color:var(--blue);}
+  input::placeholder{color:#9AAEC2;}
+
+  .sum-card{
+    background:var(--glass);
+    backdrop-filter:blur(14px);
+    border:1.5px solid rgba(255,255,255,0.9);
+    border-radius:var(--radius);
+    padding:18px;
+    margin-bottom:12px;
+    box-shadow:0 6px 20px rgba(0,120,200,0.08);
+  }
+  .sum-row{
+    display:flex; justify-content:space-between; align-items:flex-start;
+    padding:10px 0;
+    border-bottom:1px solid var(--line);
+    gap:14px;
+  }
+  .sum-row:last-child{border-bottom:none;}
+  .sum-row .k{font-size:13px; color:var(--ink-dim);}
+  .sum-row .v{font-size:14px; font-weight:600; text-align:right; color:var(--ink);}
+  .total-box{
+    background:linear-gradient(135deg, rgba(0,170,255,0.18), rgba(136,204,0,0.14));
+    border:1.5px solid var(--blue);
+    border-radius:var(--radius);
+    padding:18px;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-top:6px;
+  }
+  .total-box .l{font-size:13px; color:var(--ink-dim); font-weight:500;}
+  .total-box .v{font-family:'Sora',sans-serif; font-size:24px; font-weight:800; color:var(--blue);}
+
+  .hero{
+    text-align:left;
+    padding-top:10px;
+  }
+  .hero .badge{
+    width:56px; height:56px;
+    border-radius:16px;
+    background:linear-gradient(135deg, var(--blue), var(--blue-light));
+    display:flex; align-items:center; justify-content:center;
+    font-size:26px;
+    margin-bottom:22px;
+    box-shadow:0 10px 30px rgba(0,170,255,0.35);
+    position:relative;
+    overflow:hidden;
+  }
+  .hero .badge::before{
+    content:"";
+    position:absolute; top:0; left:0; right:0; height:50%;
+    background:linear-gradient(180deg, rgba(255,255,255,0.6), rgba(255,255,255,0));
+  }
+  .hero h1{font-size:32px;}
+  .hero .sub{font-size:16px;}
+  .hero .points{margin-top:24px; display:flex; flex-direction:column; gap:14px;}
+  .hero .point{display:flex; align-items:center; gap:12px; font-size:14.5px; color:var(--ink-dim);}
+  .hero .point .dotmark{width:6px; height:6px; border-radius:50%; background:var(--green); flex-shrink:0;}
+
+  .bottom{
+    position:fixed;
+    left:50%; transform:translateX(-50%);
+    bottom:0;
+    width:100%;
+    max-width:460px;
+    padding:16px 22px calc(env(safe-area-inset-bottom, 0px) + 20px);
+    background:#EAF6FF;
+    box-shadow:0 -6px 18px rgba(22,50,79,0.10);
+    display:flex;
+    gap:10px;
+    z-index:10;
+  }
+  .btn{
+    flex:1;
+    border:none;
+    border-radius:16px;
+    padding:16px;
+    font-family:'Sora',sans-serif;
+    font-weight:700;
+    font-size:15.5px;
+    cursor:pointer;
+    transition:transform .15s ease, opacity .2s ease;
+  }
+  .btn:active{transform:scale(0.97);}
+  .btn-primary{
+    background:linear-gradient(135deg, var(--blue), var(--blue-light));
+    color:#fff;
+    box-shadow:0 8px 20px rgba(0,170,255,0.35);
+  }
+  .btn-primary:disabled{opacity:0.35; cursor:not-allowed; box-shadow:none;}
+  .btn-ghost{
+    flex:0 0 52px;
+    background:var(--glass-strong);
+    color:var(--ink);
+    border:1.5px solid rgba(255,255,255,0.9);
+  }
+  .btn-whatsapp{
+    background:linear-gradient(135deg, #25D366, #1FBE59);
+    color:#fff;
+    box-shadow:0 8px 20px rgba(37,211,102,0.35);
+  }
+
+  .helper-note{
+    font-size:12px;
+    color:var(--ink-dim);
+    text-align:center;
+    margin-top:10px;
+  }
+
+  .success{
+    text-align:center;
+    padding-top:50px;
+  }
+  .success .check-big{
+    width:76px; height:76px;
+    border-radius:50%;
+    background:rgba(136,204,0,0.18);
+    border:2px solid var(--green);
+    margin:0 auto 24px;
+    display:flex; align-items:center; justify-content:center;
+    font-size:34px;
+    color:#5C8A00;
+  }
+</style>
+</head>
+<body>
+<div class="phone">
+
+  <header class="top">
+    <div class="brand">C1 Prep <span>·</span> Robert Rich</div>
+    <div class="dots" id="dots"></div>
+  </header>
+
+  <main>
+
+    <section class="step visible" data-step="0">
+      <div class="hero">
+        <div class="badge">🎯</div>
+        <h1>Let's build your CAE plan.</h1>
+        <p class="sub">Four quick taps and you're booked in — pick your level, your focus, your package, and a time that works.</p>
+        <div class="points">
+          <div class="point"><div class="dotmark"></div> Personalized to where you're starting from</div>
+          <div class="point"><div class="dotmark"></div> Pick 45 or 90-minute blocks, your call</div>
+          <div class="point"><div class="dotmark"></div> Sent straight to me on WhatsApp — no forms lost</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="step" data-step="1">
+      <p class="eyebrow">Step 1 of 5</p>
+      <h1>Where are you starting from?</h1>
+      <p class="sub">Your honest guess is enough — we'll confirm it together in the first lesson.</p>
+      <div class="grid" id="levelGrid">
+        <div class="opt" data-value="Solid B2">
+          <div class="icon">🌱</div>
+          <div class="txt"><div class="t">Solid B2</div><div class="d">Comfortable, but C1 still feels like a stretch</div></div>
+          <div class="check"></div>
+        </div>
+        <div class="opt" data-value="B2, aiming higher">
+          <div class="icon">📈</div>
+          <div class="txt"><div class="t">B2, aiming higher</div><div class="d">Confident in most situations, want to push further</div></div>
+          <div class="check"></div>
+        </div>
+        <div class="opt" data-value="Nearly C1">
+          <div class="icon">⚡</div>
+          <div class="txt"><div class="t">Nearly C1</div><div class="d">Just need polish and exam technique</div></div>
+          <div class="check"></div>
+        </div>
+        <div class="opt" data-value="Not sure">
+          <div class="icon">🤔</div>
+          <div class="txt"><div class="t">Not sure</div><div class="d">Happy to get assessed first</div></div>
+          <div class="check"></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="step" data-step="2">
+      <p class="eyebrow">Step 2 of 5</p>
+      <h1>What do you want to focus on?</h1>
+      <p class="sub">Pick as many as apply — we'll weight your lessons accordingly.</p>
+      <div class="grid" id="focusGrid">
+        <div class="opt" data-value="Reading & Use of English">
+          <div class="icon">📖</div>
+          <div class="txt"><div class="t">Reading &amp; Use of English</div><div class="d">Grammar, vocabulary, word formation</div></div>
+          <div class="check"></div>
+        </div>
+        <div class="opt" data-value="Writing">
+          <div class="icon">✍️</div>
+          <div class="txt"><div class="t">Writing</div><div class="d">Essays, reports, register &amp; structure</div></div>
+          <div class="check"></div>
+        </div>
+        <div class="opt" data-value="Listening">
+          <div class="icon">🎧</div>
+          <div class="txt"><div class="t">Listening</div><div class="d">Detail, inference, exam pace</div></div>
+          <div class="check"></div>
+        </div>
+        <div class="opt" data-value="Speaking">
+          <div class="icon">🗣️</div>
+          <div class="txt"><div class="t">Speaking</div><div class="d">Fluency, collaboration, confidence</div></div>
+          <div class="check"></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="step" data-step="3">
+      <p class="eyebrow">Step 3 of 5</p>
+      <h1>Choose your package</h1>
+      <p class="sub">All packages are a bank of hours — split however you like.</p>
+
+      <div class="pkg" data-value="Starter" data-price="5000" data-hours="5">
+        <div class="row"><div class="name">Starter</div><div class="price">5,000 Kč</div></div>
+        <div class="meta">5 teaching hours · 1,000 Kč/hr · good for a trial run</div>
+      </div>
+
+      <div class="pkg" data-value="Standard" data-price="8000" data-hours="10">
+        <span class="tag">Most popular</span>
+        <div class="row"><div class="name">Standard</div><div class="price">8,000 Kč</div></div>
+        <div class="meta">10 teaching hours · 800 Kč/hr</div>
+      </div>
+
+      <div class="pkg" data-value="Full Prep" data-price="12000" data-hours="20">
+        <div class="row"><div class="name">Full Prep</div><div class="price">12,000 Kč</div></div>
+        <div class="meta">20 teaching hours · 600 Kč/hr · best value for full exam prep</div>
+      </div>
+
+      <div class="toggle-row">
+        <div class="toggle" data-value="45-minute blocks">45-min blocks</div>
+        <div class="toggle" data-value="90-minute blocks">90-min blocks</div>
+      </div>
+    </section>
+
+    <section class="step" data-step="4">
+      <p class="eyebrow">Step 4 of 5</p>
+      <h1>When works best?</h1>
+      <p class="sub">Pick your usual days — exact times get confirmed once you message me.</p>
+      <div class="chips" id="dayChips">
+        <div class="chip" data-value="Mon">Mon</div>
+        <div class="chip" data-value="Tue">Tue</div>
+        <div class="chip" data-value="Wed">Wed</div>
+        <div class="chip" data-value="Thu">Thu</div>
+        <div class="chip" data-value="Fri">Fri</div>
+        <div class="chip" data-value="Sat">Sat</div>
+      </div>
+      <p class="sub" style="margin-top:24px; margin-bottom:12px;">Preferred time of day</p>
+      <div class="grid two-col" id="timeGrid">
+        <div class="opt" data-value="Early afternoon" style="padding:14px;"><div class="txt"><div class="t">Early afternoon</div></div></div>
+        <div class="opt" data-value="Late afternoon" style="padding:14px;"><div class="txt"><div class="t">Late afternoon</div></div></div>
+        <div class="opt" data-value="Evening" style="padding:14px;"><div class="txt"><div class="t">Evening</div></div></div>
+        <div class="opt" data-value="Flexible" style="padding:14px;"><div class="txt"><div class="t">Flexible</div></div></div>
+      </div>
+    </section>
+
+    <section class="step" data-step="5">
+      <p class="eyebrow">Step 5 of 5</p>
+      <h1>Almost there.</h1>
+      <p class="sub">Your info so I know who's booking in.</p>
+      <label class="field">
+        <span class="l">Full name</span>
+        <input type="text" id="inputName" placeholder="e.g. Tereza Nováková">
+      </label>
+      <label class="field">
+        <span class="l">WhatsApp number</span>
+        <input type="tel" id="inputPhone" placeholder="+420 ___ ___ ___">
+      </label>
+      <label class="field">
+        <span class="l">School (optional)</span>
+        <input type="text" id="inputSchool" placeholder="e.g. Gymnázium Jana Keplera">
+      </label>
+    </section>
+
+    <section class="step" data-step="6">
+      <p class="eyebrow">Review</p>
+      <h1>Here's your plan.</h1>
+      <div class="sum-card" id="summaryCard"></div>
+      <div class="total-box">
+        <div><div class="l">Package total</div></div>
+        <div class="v" id="summaryTotal">—</div>
+      </div>
+      <p class="helper-note">Tap below to send this straight to Robert on WhatsApp. Nothing is charged yet — payment gets sorted once confirmed.</p>
+    </section>
+
+    <section class="step" data-step="7">
+      <div class="success">
+        <div class="check-big">✓</div>
+        <h1 style="text-align:center;">Sent!</h1>
+        <p class="sub" style="text-align:center;">Your request is on its way to Robert on WhatsApp. He'll confirm your slot and get you started.</p>
+      </div>
+    </section>
+
+  </main>
+
+  <div class="bottom" id="bottomBar">
+    <button class="btn btn-primary" id="nextBtn">Get started</button>
+  </div>
+
+</div>
+
+<script>
+  const TOTAL_STEPS = 5;
+  let current = 0;
+  const state = {
+    level: null,
+    focus: [],
+    pkg: null,
+    pkgPrice: null,
+    pkgHours: null,
+    blockLength: null,
+    days: [],
+    timeOfDay: null,
+    name: '',
+    phone: '',
+    school: ''
+  };
+
+  const steps = document.querySelectorAll('.step');
+  const dotsWrap = document.getElementById('dots');
+  const bottomBar = document.getElementById('bottomBar');
+
+  function renderDots(){
+    dotsWrap.innerHTML = '';
+    for(let i=1;i<=TOTAL_STEPS;i++){
+      const d = document.createElement('div');
+      d.className = 'dot';
+      if(current > i) d.classList.add('done');
+      if(current === i) d.classList.add('active');
+      if(current >= 1 && current <= TOTAL_STEPS) dotsWrap.appendChild(d);
+    }
+  }
+
+  function goTo(n){
+    current = n;
+    steps.forEach(s => s.classList.toggle('visible', parseInt(s.dataset.step) === n));
+    renderDots();
+    updateBottomBar();
+    window.scrollTo(0,0);
+  }
+
+  function updateBottomBar(){
+    bottomBar.innerHTML = '';
+    if(current === 0){
+      bottomBar.innerHTML = `<button class="btn btn-primary" id="nextBtn">Get started</button>`;
+    } else if(current >= 1 && current <= 5){
+      const back = document.createElement('button');
+      back.className = 'btn btn-ghost';
+      back.textContent = '←';
+      back.onclick = () => goTo(current - 1);
+      const next = document.createElement('button');
+      next.className = 'btn btn-primary';
+      next.id = 'nextBtn';
+      next.textContent = current === 5 ? 'Review' : 'Continue';
+      bottomBar.appendChild(back);
+      bottomBar.appendChild(next);
+    } else if(current === 6){
+      const back = document.createElement('button');
+      back.className = 'btn btn-ghost';
+      back.textContent = '←';
+      back.onclick = () => goTo(5);
+      const send = document.createElement('button');
+      send.className = 'btn btn-whatsapp';
+      send.textContent = 'Send on WhatsApp';
+      send.onclick = sendToWhatsApp;
+      bottomBar.appendChild(back);
+      bottomBar.appendChild(send);
+    } else if(current === 7){
+      bottomBar.innerHTML = '';
+    }
+    attachNextHandler();
+  }
+
+  function attachNextHandler(){
+    const btn = document.getElementById('nextBtn');
+    if(!btn) return;
+    btn.onclick = handleNext;
+    validateStep();
+  }
+
+  function handleNext(){
+    if(current === 0){ goTo(1); return; }
+    if(current === 5){ buildSummary(); goTo(6); return; }
+    if(current < 5){ goTo(current + 1); return; }
+  }
+
+  function validateStep(){
+    const btn = document.getElementById('nextBtn');
+    if(!btn || current === 0 || current === 6 || current === 7) return;
+    let ok = true;
+    if(current === 1) ok = !!state.level;
+    if(current === 2) ok = state.focus.length > 0;
+    if(current === 3) ok = !!state.pkg && !!state.blockLength;
+    if(current === 4) ok = state.days.length > 0 && !!state.timeOfDay;
+    if(current === 5) ok = state.name.trim().length > 1 && state.phone.trim().length > 5;
+    btn.disabled = !ok;
+  }
+
+  document.getElementById('levelGrid').addEventListener('click', e => {
+    const opt = e.target.closest('.opt');
+    if(!opt) return;
+    [...opt.parentElement.children].forEach(c => c.classList.remove('selected'));
+    opt.classList.add('selected');
+    state.level = opt.dataset.value;
+    validateStep();
+  });
+
+  document.getElementById('focusGrid').addEventListener('click', e => {
+    const opt = e.target.closest('.opt');
+    if(!opt) return;
+    opt.classList.toggle('selected');
+    const v = opt.dataset.value;
+    if(state.focus.includes(v)) state.focus = state.focus.filter(x => x !== v);
+    else state.focus.push(v);
+    validateStep();
+  });
+
+  document.querySelectorAll('.pkg').forEach(pkg => {
+    pkg.addEventListener('click', () => {
+      document.querySelectorAll('.pkg').forEach(p => p.classList.remove('selected'));
+      pkg.classList.add('selected');
+      state.pkg = pkg.dataset.value;
+      state.pkgPrice = pkg.dataset.price;
+      state.pkgHours = pkg.dataset.hours;
+      validateStep();
+    });
+  });
+
+  document.querySelectorAll('.toggle-row .toggle').forEach(t => {
+    t.addEventListener('click', () => {
+      document.querySelectorAll('.toggle-row .toggle').forEach(x => x.classList.remove('selected'));
+      t.classList.add('selected');
+      state.blockLength = t.dataset.value;
+      validateStep();
+    });
+  });
+
+  document.getElementById('dayChips').addEventListener('click', e => {
+    const chip = e.target.closest('.chip');
+    if(!chip) return;
+    chip.classList.toggle('selected');
+    const v = chip.dataset.value;
+    if(state.days.includes(v)) state.days = state.days.filter(x => x !== v);
+    else state.days.push(v);
+    validateStep();
+  });
+
+  document.getElementById('timeGrid').addEventListener('click', e => {
+    const opt = e.target.closest('.opt');
+    if(!opt) return;
+    [...opt.parentElement.children].forEach(c => c.classList.remove('selected'));
+    opt.classList.add('selected');
+    state.timeOfDay = opt.dataset.value;
+    validateStep();
+  });
+
+  ['inputName','inputPhone','inputSchool'].forEach(id => {
+    document.getElementById(id).addEventListener('input', e => {
+      if(id === 'inputName') state.name = e.target.value;
+      if(id === 'inputPhone') state.phone = e.target.value;
+      if(id === 'inputSchool') state.school = e.target.value;
+      validateStep();
+    });
+  });
+
+  function buildSummary(){
+    const card = document.getElementById('summaryCard');
+    card.innerHTML = `
+      <div class="sum-row"><div class="k">Level</div><div class="v">${state.level}</div></div>
+      <div class="sum-row"><div class="k">Focus areas</div><div class="v">${state.focus.join(', ')}</div></div>
+      <div class="sum-row"><div class="k">Package</div><div class="v">${state.pkg} · ${state.pkgHours}h</div></div>
+      <div class="sum-row"><div class="k">Block length</div><div class="v">${state.blockLength}</div></div>
+      <div class="sum-row"><div class="k">Days</div><div class="v">${state.days.join(', ')}</div></div>
+      <div class="sum-row"><div class="k">Time of day</div><div class="v">${state.timeOfDay}</div></div>
+      <div class="sum-row"><div class="k">Name</div><div class="v">${state.name}</div></div>
+      <div class="sum-row"><div class="k">WhatsApp</div><div class="v">${state.phone}</div></div>
+      ${state.school ? `<div class="sum-row"><div class="k">School</div><div class="v">${state.school}</div></div>` : ''}
+    `;
+    document.getElementById('summaryTotal').textContent = Number(state.pkgPrice).toLocaleString('cs-CZ') + ' Kč';
+  }
+
+  function sendToWhatsApp(){
+    const ROBERT_WHATSAPP_NUMBER = "420000000000";
+
+    const msg =
+`Hi Robert! I'd like to book C1 prep 🎯
+
+Name: ${state.name}
+School: ${state.school || '—'}
+Level: ${state.level}
+Focus: ${state.focus.join(', ')}
+Package: ${state.pkg} (${state.pkgHours}h) — ${Number(state.pkgPrice).toLocaleString('cs-CZ')} Kč
+Block length: ${state.blockLength}
+Preferred days: ${state.days.join(', ')}
+Preferred time: ${state.timeOfDay}
+WhatsApp: ${state.phone}`;
+
+    const url = `https://wa.me/${ROBERT_WHATSAPP_NUMBER}?text=${encodeURIComponent(msg)}`;
+    window.open(url, '_blank');
+    goTo(7);
+  }
+
+  renderDots();
+  updateBottomBar();
+</script>
+
+</body>
+</html>
